@@ -1,5 +1,6 @@
 import random
 
+
 class shape:
     O_SHAPE = [[[1, 1],
                 [1, 1]]]
@@ -23,8 +24,18 @@ class shape:
                 [0, 1]],
                [[0, 0, 1],
                 [1, 1, 1]]]
+    T_SHAPE = [[[1, 1, 1],
+                [0, 1, 0]],
+               [[0, 0, 1],
+                [0, 1, 1],
+                [0, 0, 1]],
+               [[0, 1, 0],
+                [1, 1, 1]],
+               [[1, 0, 0],
+                [1, 1, 0],
+                [1, 0, 0]]]
 
-    SHAPE_TYPES = [O_SHAPE, J_SHAPE, L_SHAPE]
+    SHAPE_TYPES = [O_SHAPE, J_SHAPE, L_SHAPE, T_SHAPE]
 
     def __init__(self, x, y):
         self.rotation_index = 0
