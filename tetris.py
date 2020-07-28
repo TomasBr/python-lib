@@ -47,7 +47,7 @@ def main():
 
 def run_game():
 
-    model = game_model(BOARD_WIDTH, BOARD_HEIGHT)
+    model = game_model(BOARD_HEIGHT, BOARD_WIDTH) # 20 rows and 10 columns
 
     # Run until the user asks to quit
     running = True
@@ -72,7 +72,7 @@ def run_game():
                 elif event.key == pygame.K_RIGHT and is_valid_position(model, falling_shape, adj_x=1):
                     falling_shape.x += 1
                 elif event.key == pygame.K_UP:
-                    print("Up arrow")
+                    falling_shape = falling_shape.rotate90()
                 elif event.key == pygame.K_DOWN and is_valid_position(model, falling_shape, adj_y=1):
                     falling_shape.y += 1
                     last_fall_time = time.time()
@@ -107,11 +107,12 @@ def is_on_board(x, y):
 
 
 def is_valid_position(model, shape, adj_x=0, adj_y=0):
-    for x in range(shape.shape_width):
-        for y in range(shape.shape_height):
-            if not is_on_board(x + shape.x + adj_x, y + shape.y + adj_y):
+    for row in range(shape.shape_height):
+        for col in range(shape.shape_width):
+            if not is_on_board(col + shape.x + adj_x, row + shape.y + adj_y):
                 return False
-            if model.landed_shapes[x + shape.x + adj_x][y + shape.y + adj_y] != 0:
+
+            if model.landed_shapes[row + shape.y + adj_y][col + shape.x + adj_x] != 0:
                 return False
     return True
 
@@ -121,10 +122,10 @@ def draw_board(model):
     screen.blit(caption_label, (TOP_LEFT_X + PLAY_WIDTH / 2 - (caption_label.get_width() / 2), 25))
     pygame.draw.rect(screen, (94, 18, 36), (TOP_LEFT_X, TOP_LEFT_Y, PLAY_WIDTH, PLAY_HEIGHT), 5)
 
-    for x in range(model.width):
-        for y in range(model.height):
-            if model.landed_shapes[x][y] != 0:
-                pixel_x, pixel_y = convert_to_pixel_coords(x, y)
+    for row in range(model.rows):
+        for col in range(model.cols):
+            if model.landed_shapes[row][col] != 0:
+                pixel_x, pixel_y = convert_to_pixel_coords(col, row)
                 draw_box(pixel_x, pixel_y)
 
 
@@ -134,9 +135,10 @@ def get_new_shape():
 
 def draw_shape(shape):
     pixel_x, pixel_y = convert_to_pixel_coords(shape.x, shape.y)
-    for x in range(shape.shape_width):
-        for y in range(shape.shape_height):
-            draw_box(pixel_x + (x * BLOCK_SIZE), pixel_y + (y * BLOCK_SIZE))
+    for row in range(shape.shape_height):
+        for col in range(shape.shape_width):
+            if shape.shape_type[row][col] != 0:
+                draw_box(pixel_x + (col * BLOCK_SIZE), pixel_y + (row * BLOCK_SIZE))
 
 
 def draw_box(pixel_x, pixel_y):

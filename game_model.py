@@ -1,13 +1,14 @@
-import pygame
+import pygame, shape
 
 
 class game_model:
-    def __init__(self, width, height):
-        self.width = int(width)
-        self.height = int(height)
-        self.landed_shapes = [[0 for x in range(self.height)] for y in range(self.width)]
+    def __init__(self, rows, cols):
+        self.rows = rows
+        self.cols = cols
+        self.landed_shapes = [[0 for col in range(self.cols)] for row in range(self.rows)]
 
     def update(self, landed_shape):
-        for x in range(landed_shape.shape_width):
-            for y in range(landed_shape.shape_height):
-                self.landed_shapes[x + landed_shape.x][y + landed_shape.y] = 1
+        for row in range(landed_shape.shape_height):
+            for col in range(landed_shape.shape_width):
+                if landed_shape.shape_type[row][col] != 0:
+                    self.landed_shapes[row + landed_shape.y][col + landed_shape.x] = 1
