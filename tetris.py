@@ -109,9 +109,9 @@ def is_on_board(x, y):
 def is_valid_position(model, shape, adj_x=0, adj_y=0):
     for row in range(shape.shape_height):
         for col in range(shape.shape_width):
-            if not is_on_board(col + shape.x + adj_x, row + shape.y + adj_y):
-                return False
             if shape.shape_type[row][col] != 0:
+                if not is_on_board(col + shape.x + adj_x, row + shape.y + adj_y):
+                    return False
                 if model.landed_shapes[row + shape.y + adj_y][col + shape.x + adj_x] != 0:
                     return False
     return True
