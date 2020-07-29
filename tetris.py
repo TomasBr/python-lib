@@ -6,7 +6,14 @@ from game_model import game_model
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-RED = (255, 0, 0)
+RED = (237, 11, 25)
+LIGHTBLUE = (41, 240, 239)
+DARKBLUE = (10, 33, 236)
+ORANGE = (238, 101, 38)
+YELLOW = (246, 238, 52)
+GREEN = (38, 238, 43)
+PURPLE = (159, 35, 236)
+
 FPS = 60
 CAPTION_FONT_NAME = "comicsans"
 CAPTION_FONT_SIZE = 60
@@ -46,8 +53,7 @@ def main():
 
 
 def run_game():
-
-    model = game_model(BOARD_HEIGHT, BOARD_WIDTH) # 20 rows and 10 columns
+    model = game_model(BOARD_HEIGHT, BOARD_WIDTH)  # 20 rows and 10 columns
 
     # Run until the user asks to quit
     running = True
@@ -126,7 +132,7 @@ def draw_board(model):
         for col in range(model.cols):
             if model.landed_shapes[row][col] != 0:
                 pixel_x, pixel_y = convert_to_pixel_coords(col, row)
-                draw_box(pixel_x, pixel_y)
+                draw_box(pixel_x, pixel_y, get_color_from_index(model.landed_shapes[row][col]))
 
 
 def get_new_shape():
@@ -138,11 +144,11 @@ def draw_shape(shape):
     for row in range(shape.shape_height):
         for col in range(shape.shape_width):
             if shape.shape_type[row][col] != 0:
-                draw_box(pixel_x + (col * BLOCK_SIZE), pixel_y + (row * BLOCK_SIZE))
+                draw_box(pixel_x + (col * BLOCK_SIZE), pixel_y + (row * BLOCK_SIZE), get_color_from_index(shape.shape_type[row][col]))
 
 
-def draw_box(pixel_x, pixel_y):
-    pygame.draw.rect(screen, RED, (pixel_x + 1, pixel_y + 1, BLOCK_SIZE - 1, BLOCK_SIZE - 1))
+def draw_box(pixel_x, pixel_y, color):
+    pygame.draw.rect(screen, color, (pixel_x + 1, pixel_y + 1, BLOCK_SIZE - 1, BLOCK_SIZE - 1))
 
 
 def convert_to_pixel_coords(box_x, box_y):
@@ -151,6 +157,19 @@ def convert_to_pixel_coords(box_x, box_y):
 
 def make_text_object(text, font, color):
     return font.render(text, True, color)
+
+
+def get_color_from_index(index):
+    color_dict = {
+        1: YELLOW,
+        2: DARKBLUE,
+        3: ORANGE,
+        4: LIGHTBLUE,
+        5: GREEN,
+        6: RED,
+        7: PURPLE
+    }
+    return color_dict.get(index)
 
 
 if __name__ == "__main__":

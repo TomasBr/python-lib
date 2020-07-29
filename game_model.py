@@ -11,4 +11,4 @@ class game_model:
         for row in range(landed_shape.shape_height):
             for col in range(landed_shape.shape_width):
                 if landed_shape.shape_type[row][col] != 0:
-                    self.landed_shapes[row + landed_shape.y][col + landed_shape.x] = 1
+                    self.landed_shapes[row + landed_shape.y][col + landed_shape.x] = landed_shape.shape_type[row][col]
