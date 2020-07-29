@@ -7,8 +7,8 @@ from game_model import game_model
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (237, 11, 25)
-LIGHTBLUE = (41, 240, 239)
-DARKBLUE = (10, 33, 236)
+LIGHT_BLUE = (41, 240, 239)
+DARK_BLUE = (10, 33, 236)
 ORANGE = (238, 101, 38)
 YELLOW = (246, 238, 52)
 GREEN = (38, 238, 43)
@@ -95,6 +95,7 @@ def run_game():
                 falling_shape.y += 1
             else:
                 model.update(falling_shape)
+                remove_completed_lines(model)
                 falling_shape = None
 
         draw_board(model)
@@ -131,8 +132,8 @@ def draw_board(model):
     for row in range(model.rows):
         for col in range(model.cols):
             if model.landed_shapes[row][col] != 0:
-                pixel_x, pixel_y = convert_to_pixel_coords(col, row)
-                draw_box(pixel_x, pixel_y, get_color_from_index(model.landed_shapes[row][col]))
+                pixel_x, pixel_y = convert_to_pixel_coordinates(col, row)
+                draw_box(pixel_x, pixel_y, get_rgb_from_index(model.landed_shapes[row][col]))
 
 
 def get_new_shape():
@@ -140,18 +141,19 @@ def get_new_shape():
 
 
 def draw_shape(shape):
-    pixel_x, pixel_y = convert_to_pixel_coords(shape.x, shape.y)
+    pixel_x, pixel_y = convert_to_pixel_coordinates(shape.x, shape.y)
     for row in range(shape.shape_height):
         for col in range(shape.shape_width):
             if shape.shape_type[row][col] != 0:
-                draw_box(pixel_x + (col * BLOCK_SIZE), pixel_y + (row * BLOCK_SIZE), get_color_from_index(shape.shape_type[row][col]))
+                draw_box(pixel_x + (col * BLOCK_SIZE), pixel_y + (row * BLOCK_SIZE),
+                         get_rgb_from_index(shape.shape_type[row][col]))
 
 
 def draw_box(pixel_x, pixel_y, color):
     pygame.draw.rect(screen, color, (pixel_x + 1, pixel_y + 1, BLOCK_SIZE - 1, BLOCK_SIZE - 1))
 
 
-def convert_to_pixel_coords(box_x, box_y):
+def convert_to_pixel_coordinates(box_x, box_y):
     return TOP_LEFT_X + (box_x * BLOCK_SIZE), TOP_LEFT_Y + (box_y * BLOCK_SIZE)
 
 
@@ -159,18 +161,32 @@ def make_text_object(text, font, color):
     return font.render(text, True, color)
 
 
-def get_color_from_index(index):
+def get_rgb_from_index(index):
     color_dict = {
         1: YELLOW,
-        2: DARKBLUE,
+        2: DARK_BLUE,
         3: ORANGE,
-        4: LIGHTBLUE,
+        4: LIGHT_BLUE,
         5: GREEN,
         6: RED,
         7: PURPLE
     }
     return color_dict.get(index)
 
+
+def remove_completed_lines(model):
+    completed_lines = 0
+    for row in range(model.rows):
+        is_complete = True
+        for col in range(model.cols):
+            if model.landed_shapes[row][col] == 0:
+                is_complete = False
+        if is_complete:
+            completed_lines += 1
+            model.landed_shapes.pop(row)
+            model.landed_shapes.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+
+    return completed_lines
 
 if __name__ == "__main__":
     main()
